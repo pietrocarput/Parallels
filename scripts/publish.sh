@@ -33,25 +33,41 @@ function sign_cmd() {
 }
 
 function ensure_download_ptfm_dmg() {
-	echo "check ${PTFM_DMG_FILE}"
+	if [ -f "${PTFM_DMG_FILE}" ]; then
+		echo "[*] Check hash for \"${PTFM_DMG_FILE}\""
+		FILE_HASH=$(shasum -a 256 -b "${PTFM_DMG_FILE}" | awk '{print $1}')
+		if [ ${FILE_HASH} != ${PTFM_SHA256SUM} ]; then
+			echo "[-] ${FILE_HASH} != ${PTFM_SHA256SUM}"
+			echo "[*] Delete \"${PTFM_DMG_FILE}\""
+			rm -f "${PTFM_DMG_FILE}"
+		fi
+	fi
 	if [ ! -f "${PTFM_DMG_FILE}" ]; then
-		echo "download ${PTFM_DMG_DOWNLOAD_URL}"
+		echo "[*] Download ${PTFM_DMG_DOWNLOAD_URL}"
 		mkdir -p $(dirname "${PTFM_DMG_FILE}")
 		curl -L --progress-bar -o "${PTFM_DMG_FILE}" "${PTFM_DMG_DOWNLOAD_URL}"
 	fi
 }
 
 function ensure_download_pdfm_dmg() {
-	echo "check ${PDFM_DMG_FILE}"
+	if [ -f "${PDFM_DMG_FILE}" ]; then
+		echo "[*] Check hash for \"${PDFM_DMG_FILE}\""
+		FILE_HASH=$(shasum -a 256 -b "${PDFM_DMG_FILE}" | awk '{print $1}')
+		if [ ${FILE_HASH} != ${PDFM_SHA256SUM} ]; then
+			echo "[-] ${FILE_HASH} != ${PDFM_SHA256SUM}"
+			echo "[*] Delete \"${PDFM_DMG_FILE}\""
+			rm -f "${PDFM_DMG_FILE}"
+		fi
+	fi
 	if [ ! -f "${PDFM_DMG_FILE}" ]; then
-		echo "download ${PDFM_DMG_DOWNLOAD_URL}"
+		echo "[*] Download ${PDFM_DMG_DOWNLOAD_URL}"
 		mkdir -p $(dirname "${PDFM_DMG_FILE}")
 		curl -L --progress-bar -o "${PDFM_DMG_FILE}" "${PDFM_DMG_DOWNLOAD_URL}"
 	fi
 }
 
 function copy_ptfm_files() {
-	echo "copy files"
+	echo "[*] Copy files"
 	if [ -d "${PTFM_TMP_DIR}" ]; then
 		rm -rf "${PTFM_TMP_DIR}" > /dev/null
 	fi
@@ -67,7 +83,7 @@ function copy_ptfm_files() {
 }
 
 function copy_pdfm_files() {
-	echo "copy files"
+	echo "[*] Copy files"
 	if [ -d "${PDFM_TMP_DIR}" ]; then
 		rm -rf "${PDFM_TMP_DIR}" > /dev/null
 	fi
@@ -84,39 +100,41 @@ function copy_pdfm_files() {
 }
 
 function apply_ptfm_crack() {
-	echo "apply patch"
+	echo "[*] Apply patch"
+
 	if [ -f /usr/local/opt/llvm/bin/llvm-strip ]; then
 		/usr/local/opt/llvm/bin/llvm-strip -s "${CRACK_LIB}" > /dev/null
 	fi
 
-	cp -f -X "${CRACK_LIB}" \
-		"${PTFM_TMP_DIR}/Install Parallels Toolbox.app/Contents/Frameworks/libConfigurer64.dylib" \
-		> /dev/null
+	RPATH="@rpath/libConfigurer64.dylib"
+	DST="${PTFM_TMP_DIR}/Install Parallels Toolbox.app/Contents/Frameworks/libConfigurer64.dylib"
+	LOADER="${PTFM_TMP_DIR}/Install Parallels Toolbox.app/Contents/Frameworks/libLogging.dylib"
 
-	"${CUR_PATH}/insert_dylib" --inplace --all-yes \
-		"@rpath/libConfigurer64.dylib" \
-		"${PTFM_TMP_DIR}/Install Parallels Toolbox.app/Contents/Frameworks/libLogging.dylib" \
-		> /dev/null
+	"${CUR_PATH}/insert_dylib" --inplace --overwrite --no-strip-codesig --all-yes \
+		"${RPATH}" "${LOADER}" > /dev/null
+
+	cp -f -X "${CRACK_LIB}" "${DST}" > /dev/null
 }
 
 function apply_pdfm_crack() {
-	echo "apply patch"
+	echo "[*] Apply patch"
+
 	if [ -f /usr/local/opt/llvm/bin/llvm-strip ]; then
 		/usr/local/opt/llvm/bin/llvm-strip -s "${CRACK_LIB}" > /dev/null
 	fi
 
-	cp -f -X "${CRACK_LIB}" \
-		"${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Frameworks/libConfigurer64.dylib" \
-		> /dev/null
+	RPATH="@rpath/libConfigurer64.dylib"
+	DST="${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Frameworks/libConfigurer64.dylib"
+	LOADER="${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Frameworks/QtXml.framework/Versions/5/QtXml"
 
-	"${CUR_PATH}/insert_dylib" --inplace --all-yes \
-		"@rpath/libConfigurer64.dylib" \
-		"${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Frameworks/QtXml.framework/Versions/5/QtXml" \
-		> /dev/null
+	"${CUR_PATH}/insert_dylib" --inplace --overwrite --no-strip-codesig --all-yes \
+		"${RPATH}" "${LOADER}" > /dev/null
+
+	cp -f -X "${CRACK_LIB}" "${DST}" > /dev/null
 }
 
 function sign_ptfm() {
-	echo "sign app"
+	echo "[*] Sign Parallels Toolbox App"
 	sign_cmd "${PTFM_TMP_DIR}/Install Parallels Toolbox.app/Contents/Library/Install/ToolboxInstaller"
 	sign_cmd "${PTFM_TMP_DIR}/Install Parallels Toolbox.app/Contents/Applications/Airplane Mode.app"
 	sign_cmd "${PTFM_TMP_DIR}/Install Parallels Toolbox.app/Contents/Applications/Alarm.app"
@@ -176,7 +194,7 @@ function sign_ptfm() {
 }
 
 function sign_pdfm() {
-	echo "sign app"
+	echo "[*] Sign Parallels Desktop App"
 	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Applications/Parallels Link.app"
 	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Applications/Parallels Mounter.app"
 	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Applications/Parallels Technical Data Reporter.app"
@@ -193,7 +211,7 @@ function set_pdfm_app_hide() {
 }
 
 function create_ptfm_dmg() {
-	echo "create dmg ${PTFM_PUBLISH_FILE}"
+	echo "[*] Create dmg ${PTFM_PUBLISH_FILE}"
 	mkdir -p "${PUBLISH_PATH}"
 
 	if [ -f "${PTFM_PUBLISH_FILE}" ]; then
@@ -214,7 +232,7 @@ function create_ptfm_dmg() {
 }
 
 function create_pdfm_dmg() {
-	echo "create dmg ${PDFM_PUBLISH_FILE}"
+	echo "[*] Create dmg ${PDFM_PUBLISH_FILE}"
 	mkdir -p "${PUBLISH_PATH}"
 
 	if [ -f "${PDFM_PUBLISH_FILE}" ]; then
@@ -251,9 +269,5 @@ function publish_pdfm_crack_dmg() {
 	create_pdfm_dmg
 }
 
-
 publish_ptfm_crack_dmg
 publish_pdfm_crack_dmg
-
-
-

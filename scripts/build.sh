@@ -11,6 +11,8 @@ if [ -f /usr/local/opt/llvm/bin/clang ]; then
 	CC=/usr/local/opt/llvm/bin/clang
 	CXX=/usr/local/opt/llvm/bin/clang++
 	PATH="/usr/local/opt/llvm/bin:$PATH"
+else
+	echo '[*] not found llvm homebrew version, you can install with "brew install llvm".'
 fi
 
 cmake -S "${ROOT_PATH}" -B "${ROOT_PATH}/build" \
@@ -19,4 +21,5 @@ cmake -S "${ROOT_PATH}" -B "${ROOT_PATH}/build" \
 	-DCMAKE_OSX_DEPLOYMENT_TARGET="11.0" \
 	-DLOGGING_DISABLE=1 \
 && \
-cmake --build "${ROOT_PATH}/build" --target Configurer64 -j8
+cmake --build "${ROOT_PATH}/build" --target Configurer64 -j8 \
+&& echo "[*] Build Success"
