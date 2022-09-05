@@ -2,9 +2,9 @@
 
 Crack for Parallels Desktop.
 
-[x] Support Intel & Apple Silicon (M1)
-[ ] Network problem
-[ ] USB problem
+- [x] Support Intel & Apple Silicon (M1)
+- [ ] Network problem
+- [ ] USB problem
 
 
 # Network & USB problem
