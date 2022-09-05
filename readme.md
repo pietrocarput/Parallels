@@ -1,10 +1,28 @@
 # Parallels Desktop Crack
 
-Crack for Parallels Desktop 17.1.4 51567 & Toolbox 5.5.1 4410.
+Crack for Parallels Desktop.
 
-Only work for Intel macOS.
+[x] Support Intel & Apple Silicon (M1)
+[ ] Network problem
+[ ] USB problem
 
-I write some arm64 version patch code but i don't have arm64 macOS test, you can continue this work if you interested.
+
+# Network & USB problem
+
+Parallels Desktop new version use Apple's hypervisor framework vmnet API need a paid Developer ID and request to Apple enable vmnet access permission.
+
+So i don't know how to bypass it.
+
+Here have a temp solution:
+
+```
+killall -9 prl_client_app
+sudo sed -i '' 's|<UseKextless>.*</UseKextless>|<UseKextless>0</UseKextless>|' /Library/Preferences/Parallels/network.desktop.xml
+sudo sed -i '' 's|<Usb>.*</Usb>|<Usb>1</Usb>|' /Library/Preferences/Parallels/dispatcher.desktop.xml
+```
+
+After this, network will work, USB only work with storage device.
+
 
 # Build
 
@@ -14,24 +32,22 @@ git submodule update --init --recursive
 ./scripts/build.bat
 ```
 
+
 # Install & Test
 
 ```
 sudo ./scripts/install.sh
 ```
 
+
 # Publish DMG
 
 ```
+brew install create-dmg
 ./scripts/publish.sh
 ```
 
 You can found packaged dmg file in `publish` folder.
-
-```
-ParallelsDesktop-17.1.4-51567_Crack.dmg
-ParallelsToolbox-5.5.1-4410_Crack.dmg
-```
 
 Good Luck!
 

@@ -19,7 +19,6 @@ cmake -S "${ROOT_PATH}" -B "${ROOT_PATH}/build" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
 	-DCMAKE_OSX_DEPLOYMENT_TARGET="11.0" \
-	-DLOGGING_DISABLE=1 \
 && \
-cmake --build "${ROOT_PATH}/build" --target Configurer64 -j8 \
+cmake --build "${ROOT_PATH}/build" --target UIWarp -j8 \
 && echo "[*] Build Success"
