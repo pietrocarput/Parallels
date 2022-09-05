@@ -224,6 +224,8 @@ function sign_pdfm() {
 	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsVM1014.entitlements"  "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/Parallels VM 10.14.app"
 	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsVM.entitlements"      "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/Parallels VM.app"
 	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsDesktop.entitlements" "${PDFM_TMP_DIR}/Parallels Desktop.app"
+	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsDesktop.entitlements" "${PDFM_TMP_DIR}/Parallels Desktop.app"
+	sign_cmd "${PDFM_TMP_DIR}/Install.app"
 }
 
 function set_pdfm_app_hide() {
