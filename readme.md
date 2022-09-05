@@ -2,9 +2,10 @@
 
 Crack for Parallels Desktop.
 
-- [x] Support Intel & Apple Silicon (M1)
-- [ ] Network problem
-- [ ] USB problem
+- [x] Support Intel
+- [ ] Support Apple Silicon (M1)
+- [ ] Network
+- [ ] USB
 
 
 # Network & USB problem
@@ -27,8 +28,6 @@ After this, network will work, USB only work with storage device.
 # Build
 
 ```
-brew install llvm
-git submodule update --init --recursive
 ./scripts/build.bat
 ```
 

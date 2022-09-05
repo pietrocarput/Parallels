@@ -22,8 +22,8 @@ PDFM_PUBLISH_FILE="${PUBLISH_PATH}/ParallelsDesktop-${PDFM_VERSION}_Crack.dmg"
 
 CODESIGN_CERT=-
 
-if [ -n "$(security find-identity -v -p codesigning | grep B8474E27C322DFB3D4A0168127EB02DB877C3F81)" ]; then
-	CODESIGN_CERT=B8474E27C322DFB3D4A0168127EB02DB877C3F81
+if [ -n "$(security find-identity -v -p codesigning | grep 6E7BDDB56DD3D9C35A1EAFC787040ADF426EE7F2)" ]; then
+	CODESIGN_CERT=6E7BDDB56DD3D9C35A1EAFC787040ADF426EE7F2
 fi
 
 CRACK_LIB_DST_NAME="libUIWarp"
@@ -33,7 +33,7 @@ PTFM_TMP_DIR="${TEMP_PATH}/ptfm_files"
 PDFM_TMP_DIR="${TEMP_PATH}/pdfm_files"
 
 function sign_cmd() {
-	codesign -f -s ${CODESIGN_CERT} -o runtime --all-architectures --deep "$@"
+	codesign -f -s ${CODESIGN_CERT} --all-architectures --deep "$@"
 }
 
 function ensure_download_ptfm_dmg() {

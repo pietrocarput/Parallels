@@ -115,7 +115,7 @@ void func_write_fake_license()
     0xD0, 0xFA, 0xFA, 0xFA, 0xFA, 0xF8, 0xAA, 0xAF, 0xB8, 0xB6, 0xB3, 0xB9, 0x99, 0xBF, 0xA8, 0xAE,
     0xA9, 0xF8, 0xE0, 0xFA, 0xF8, 0xF8, 0xF6, 0xD0, 0xFA, 0xFA, 0xFA, 0xFA, 0xF8, 0xA9, 0xB3, 0xBD,
     0xB4, 0xBB, 0xAE, 0xAF, 0xA8, 0xBF, 0xF8, 0xE0, 0xFA, 0xF8, 0xF8, 0xD0, 0xA7 
-};
+  };
 
   // const char* fake_license_data = "{\n    "license": "{\\"name\\": null, \\"uuid\\": \\"\\", \\"lic_key\\": \\"\\", \\"product_version\\": \\"18.*\\", \\"is_upgrade\\": false, \\"is_sublicense\\": false, \\"parent_key\\": null, \\"parent_uuid\\": null, \\"main_period_ends_at\\": \\"2099-09-09 00:00:00\\", \\"grace_period_ends_at\\": \\"2099-09-09 00:00:00\\", \\"is_auto_renewable\\": false, \\"is_nfr\\": false, \\"is_beta\\": false, \\"is_china\\": false, \\"is_suspended\\": false, \\"is_expired\\": false, \\"is_grace_period\\": false, \\"is_purchased_online\\": false, \\"limit\\": 10, \\"usage\\": 1, \\"edition\\": 2, \\"platform\\": 3, \\"product\\": 7, \\"offline\\": true, \\"cpu_limit\\": 32, \\"ram_limit\\": 131072, \\"hosts\\": [{\\"name\\": \\"GDPR_HIDDEN\\", \\"hw_id\\": \\"\\", \\"product_version\\": \\"\\", \\"activated_at\\": \\"2021-05-09 00:00:00\\"}], \\"is_trial\\": false}",\n    "publicCerts": "",\n    "signature": ""\n}";
 
