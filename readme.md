@@ -7,14 +7,15 @@ Crack for Parallels Desktop.
 - [ ] Network
 - [ ] USB
 
-
-# Network & USB problem
+# Apple Silicon (M1) & Network & USB problem
 
 Parallels Desktop new version use Apple's hypervisor framework vmnet API need a paid Developer ID and request to Apple enable vmnet access permission.
 
-So i don't know how to bypass it.
+Parallels Desktop M1 version only support Apple's hypervisor framework.
 
-Here have a temp solution:
+I don't know how to bypass it. So this crack version not support M1.
+
+But Intel version have a temp solution:
 
 ```
 killall -9 prl_client_app
