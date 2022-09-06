@@ -23,7 +23,7 @@ killall -9 prl_disp_service
 2. Copy crack file
 
 ```
-sudo copy -f prl_disp_service "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
+sudo cp -f prl_disp_service "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
 ```
 
 3. Copy licenses.json
