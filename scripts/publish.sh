@@ -22,18 +22,11 @@ PDFM_PUBLISH_FILE="${PUBLISH_PATH}/ParallelsDesktop-${PDFM_VERSION}_Crack.dmg"
 
 CODESIGN_CERT=-
 
-if [ -n "$(security find-identity -v -p codesigning | grep 6E7BDDB56DD3D9C35A1EAFC787040ADF426EE7F2)" ]; then
-	CODESIGN_CERT=6E7BDDB56DD3D9C35A1EAFC787040ADF426EE7F2
-fi
-
-CRACK_LIB_DST_NAME="libUIWarp"
-CRACK_LIB="${ROOT_PATH}/build/${CRACK_LIB_DST_NAME}.dylib"
-
 PTFM_TMP_DIR="${TEMP_PATH}/ptfm_files"
 PDFM_TMP_DIR="${TEMP_PATH}/pdfm_files"
 
 function sign_cmd() {
-	codesign -f -s ${CODESIGN_CERT} --all-architectures --deep "$@"
+	codesign -f -s ${CODESIGN_CERT} --timestamp=none --all-architectures --deep "$@"
 }
 
 function ensure_download_ptfm_dmg() {
@@ -123,25 +116,14 @@ function apply_ptfm_crack() {
 function apply_pdfm_crack() {
 	echo "[*] Apply patch"
 
-	if [ -f /usr/local/opt/llvm/bin/llvm-strip ]; then
-		/usr/local/opt/llvm/bin/llvm-strip -s "${CRACK_LIB}" > /dev/null
-	fi
-
-	RPATH="@rpath/${CRACK_LIB_DST_NAME}.dylib"
-	DST="${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Frameworks/${CRACK_LIB_DST_NAME}.dylib"
-	LOADER="${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Frameworks/QtXml.framework/Versions/5/QtXml"
-
-	"${CUR_PATH}/insert_dylib" --inplace --overwrite --no-strip-codesig --all-yes \
-		"${RPATH}" "${LOADER}" > /dev/null
-
-	cp -f -X "${CRACK_LIB}" "${DST}" > /dev/null
-
 	SRC="${ROOT_PATH}/crack/pdfm-18.0.1.53056/prl_client_app"
 	DST="${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/prl_client_app"
+	echo "[*] Copy \"${SRC}\" to \"${DST}\""
 	cp -f -X "${SRC}" "${DST}" > /dev/null
 
 	SRC="${ROOT_PATH}/crack/pdfm-18.0.1.53056/prl_disp_service"
 	DST="${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
+	echo "[*] Copy \"${SRC}\" to \"${DST}\""
 	cp -f -X "${SRC}" "${DST}" > /dev/null
 }
 
@@ -207,25 +189,8 @@ function sign_ptfm() {
 
 function sign_pdfm() {
 	echo "[*] Sign Parallels Desktop App"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Library/QuickLook/ExeQL.qlgenerator"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Library/QuickLook/ParallelsQL.qlgenerator"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Resources/launchd_wrapper"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Resources/libprl_shared_apps.dylib"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Resources/lua/ssl.so"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Resources/lua/mime/core.so"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Resources/lua/socket/core.so"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Resources/lua/socket/serial.so"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Resources/lua/socket/unix.so"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Applications/Parallels Link.app"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Applications/Parallels Mounter.app"
-	sign_cmd "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/Applications/Parallels Technical Data Reporter.app"
-	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsMacVM.entitlements"   "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/Parallels Mac VM.app"
-	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsService.entitlements" "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/Parallels Service.app"
-	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsVM1014.entitlements"  "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/Parallels VM 10.14.app"
-	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsVM.entitlements"      "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/Parallels VM.app"
-	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsDesktop.entitlements" "${PDFM_TMP_DIR}/Parallels Desktop.app"
-	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsDesktop.entitlements" "${PDFM_TMP_DIR}/Parallels Desktop.app"
-	sign_cmd "${PDFM_TMP_DIR}/Install.app"
+	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsService.entitlements" "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
+	sign_cmd --entitlements "${ROOT_PATH}/entitlements/ParallelsDesktop/ParallelsService.entitlements" "${PDFM_TMP_DIR}/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
 }
 
 function set_pdfm_app_hide() {

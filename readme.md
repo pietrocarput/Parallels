@@ -1,53 +1,39 @@
 # Parallels Desktop Crack
 
-Crack for Parallels Desktop.
+Crack for Parallels Desktop 18.0.1-53056
 
 - [x] Support Intel
-- [ ] Support Apple Silicon (M1)
-- [ ] Network
-- [ ] USB
+- [x] Support Apple Silicon (M1)
+- [x] Network
+- [x] USB
 
-# Apple Silicon (M1) & Network & USB problem
+# Usage
 
-Parallels Desktop new version use Apple's hypervisor framework vmnet API need a paid Developer ID and request to Apple enable vmnet access permission.
+run install.sh
 
-Parallels Desktop M1 version only support Apple's hypervisor framework.
+# Manual
 
-I don't know how to bypass it. So this crack version not support M1.
-
-But Intel version have a temp solution:
+1. Exit Parallels Desktop
 
 ```
 killall -9 prl_client_app
-sudo sed -i '' 's|<UseKextless>.*</UseKextless>|<UseKextless>0</UseKextless>|' /Library/Preferences/Parallels/network.desktop.xml
-sudo sed -i '' 's|<Usb>.*</Usb>|<Usb>1</Usb>|' /Library/Preferences/Parallels/dispatcher.desktop.xml
+killall -9 prl_disp_service
 ```
 
-After this, network will work, USB only work with storage device.
-
-
-# Build
+2. Copy crack file
 
 ```
-./scripts/build.bat
+sudo copy -f prl_disp_service "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
 ```
 
-
-# Install & Test
-
-```
-sudo ./scripts/install.sh
-```
-
-
-# Publish DMG
+3. Copy licenses.json
 
 ```
-brew install create-dmg
-./scripts/publish.sh
+sudo echo '{"license":"{\\"product_version\\":\\"18.*\\",\\"edition\\":2,\\"platform\\":3,\\"product\\":7,\\"offline\\":true,\\"cpu_limit\\":32,\\"ram_limit\\":131072}"}' > "/Library/Preferences/Parallels/licenses.json"
 ```
 
-You can found packaged dmg file in `publish` folder.
+4. Sign
 
-Good Luck!
-
+```
+sudo codesign -f -s - --timestamp=none --all-architectures --entitlements ParallelsService.entitlements "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
+```
