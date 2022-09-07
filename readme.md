@@ -9,7 +9,9 @@ Crack for Parallels Desktop 18.0.1-53056
 
 # Usage
 
-run install.sh
+```
+sudo ./install.sh
+```
 
 # Manual
 
@@ -29,7 +31,8 @@ sudo cp -f prl_disp_service "/Applications/Parallels Desktop.app/Contents/MacOS/
 3. Copy licenses.json
 
 ```
-sudo echo '{"license":"{\\"product_version\\":\\"18.*\\",\\"edition\\":2,\\"platform\\":3,\\"product\\":7,\\"offline\\":true,\\"cpu_limit\\":32,\\"ram_limit\\":131072}"}' > "/Library/Preferences/Parallels/licenses.json"
+sudo rm -f "/Library/Preferences/Parallels/licenses.json"
+sudo cp licenses.json "/Library/Preferences/Parallels/licenses.json"
 ```
 
 4. Sign
