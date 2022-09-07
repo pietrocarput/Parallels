@@ -1,18 +1,21 @@
 #!/bin/sh
 
-CUR_PATH=$(cd "$(dirname $(readlink -f "$0"))" && pwd)
+BASE_PATH=$(dirname $(
+  cd $(dirname "$0")
+  pwd
+))
 
-PDFM_DISP_CRACK="${CUR_PATH}/prl_disp_service"
+PDFM_DISP_CRACK="${BASE_PATH}/prl_disp_service"
 PDFM_DISP_DST="/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
-PDFM_DISP_ENT="${CUR_PATH}/ParallelsService.entitlements"
+PDFM_DISP_ENT="${BASE_PATH}/ParallelsService.entitlements"
 
-LICENSE_FILE="${CUR_PATH}/licenses.json"
+LICENSE_FILE="${BASE_PATH}/licenses.json"
 LICENSE_DST="/Library/Preferences/Parallels/licenses.json"
 
 echo "[*] Kill Parallels Desktop"
 
-killall -9 -q prl_client_app > /dev/null
-killall -9 -q prl_disp_service > /dev/null
+killall -9 prl_client_app 2>/dev/null
+killall -9 prl_disp_service 2>/dev/null
 
 echo "[*] Copy prl_disp_service"
 
