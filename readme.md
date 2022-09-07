@@ -9,9 +9,18 @@ Crack for Parallels Desktop 18.0.1-53056
 
 # Usage
 
-```
-sudo ./install.sh
-```
+1. Install Parallels Desktop 18.0.1-53056.
+
+    https://download.parallels.com/desktop/v18/18.0.1-53056/ParallelsDesktop-18.0.1-53056.dmg
+
+2. Exit parallels account.
+
+3. Download this repo file.
+
+4. Extract and run Terminal in this directory.
+
+5. `chmod +x ./install.sh && ./install.sh`
+
 
 # Manual
 
@@ -26,6 +35,8 @@ killall -9 prl_disp_service
 
 ```
 sudo cp -f prl_disp_service "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
+sudo chown root:wheel "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
+sudo chmod 755 "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
 ```
 
 3. Copy licenses.json
@@ -33,10 +44,12 @@ sudo cp -f prl_disp_service "/Applications/Parallels Desktop.app/Contents/MacOS/
 ```
 sudo rm -f "/Library/Preferences/Parallels/licenses.json"
 sudo cp licenses.json "/Library/Preferences/Parallels/licenses.json"
+sudo chown root:wheel "/Library/Preferences/Parallels/licenses.json"
+sudo chmod 444 "/Library/Preferences/Parallels/licenses.json"
 ```
 
 4. Sign
 
 ```
-sudo codesign -f -s - --timestamp=none --all-architectures --entitlements ParallelsService.entitlements "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
+sudo codesign -f -s - --timestamp=none --all-architectures --deep --entitlements ParallelsService.entitlements "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
 ```

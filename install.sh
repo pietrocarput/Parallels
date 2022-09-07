@@ -20,6 +20,8 @@ killall -9 prl_disp_service 2>/dev/null
 echo "[*] Copy prl_disp_service"
 
 sudo cp -f ${PDFM_DISP_CRACK} "${PDFM_DISP_DST}"
+sudo chown root:wheel "${PDFM_DISP_DST}"
+sudo chmod 755 "${PDFM_DISP_DST}"
 
 echo "[*] Sign prl_disp_service"
 
@@ -28,11 +30,9 @@ sudo codesign -f -s - --timestamp=none --all-architectures --entitlements ${PDFM
 echo "[*] Copy licenses.json"
 
 sudo rm -f "${LICENSE_DST}" > /dev/null
-
 sudo cp "${LICENSE_FILE}" "${LICENSE_DST}"
-
 sudo chown root:wheel "${LICENSE_DST}"
-
 sudo chmod 444 "${LICENSE_DST}"
 
 echo "[*] Crack over"
+
