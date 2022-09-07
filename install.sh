@@ -1,9 +1,9 @@
 #!/bin/sh
 
-BASE_PATH=$(dirname $(
-  cd $(dirname "$0")
+BASE_PATH=$(
+  cd $(dirname "$0");
   pwd
-))
+)
 
 PDFM_DISP_CRACK="${BASE_PATH}/prl_disp_service"
 PDFM_DISP_DST="/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
