@@ -53,3 +53,28 @@ sudo chmod 444 "/Library/Preferences/Parallels/licenses.json"
 ```
 sudo codesign -f -s - --timestamp=none --all-architectures --deep --entitlements ParallelsService.entitlements "/Applications/Parallels Desktop.app/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
 ```
+
+# Notice
+
+Parallels Desktop may upload client info or logs to server.
+
+You can use a firewall block there domains.
+
+Or use Hosts, AdGuardHome filter DNS resolve.
+
+```
+download.parallels.com
+update.parallels.com
+desktop.parallels.com
+download.parallels.com.cdn.cloudflare.net
+update.parallels.com.cdn.cloudflare.net
+desktop.parallels.com.cdn.cloudflare.net
+www.parallels.cn
+www.parallels.com
+reportus.parallels.com
+parallels.com
+parallels.cn
+pax-manager.myparallels.com
+myparallels.com
+my.parallels.com
+```
