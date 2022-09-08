@@ -3,7 +3,7 @@
 Crack for Parallels Desktop 18.0.1-53056
 
 - [x] Support Intel
-- [x] Support Apple Silicon (M1)
+- [x] Support Apple Silicon (M1 & M2)
 - [x] Network
 - [x] USB
 
@@ -19,7 +19,7 @@ Crack for Parallels Desktop 18.0.1-53056
 
 4. Extract and run Terminal in this directory.
 
-5. `chmod +x ./install.sh && ./install.sh`
+5. `chmod +x ./install.sh && sudo ./install.sh`
 
 
 # Manual
