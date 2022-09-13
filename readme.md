@@ -1,6 +1,6 @@
 # Parallels Desktop
 
-Crack for Parallels Desktop 18.0.1-53056
+Crack for Parallels Desktop 18.0.2-53077
 
 - [x] Support Intel
 - [x] Support Apple Silicon (M1 & M2)
@@ -9,9 +9,9 @@ Crack for Parallels Desktop 18.0.1-53056
 
 # Usage
 
-1. Install Parallels Desktop 18.0.1-53056.
+1. Install Parallels Desktop 18.0.2-53077.
 
-    https://download.parallels.com/desktop/v18/18.0.1-53056/ParallelsDesktop-18.0.1-53056.dmg
+    https://download.parallels.com/desktop/v18/18.0.2-53077/ParallelsDesktop-18.0.2-53077.dmg
 
 2. Exit parallels account.
 
