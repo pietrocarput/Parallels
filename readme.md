@@ -1,4 +1,4 @@
-# Parallels Desktop Crack
+# Parallels Desktop
 
 Crack for Parallels Desktop 18.0.1-53056
 
