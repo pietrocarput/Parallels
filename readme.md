@@ -72,20 +72,20 @@ You can use a firewall, hosts or custom DNS block there domains.
 ## Hosts
 
 ```
-127.0.0.1 download.parallels.com
-127.0.0.1 update.parallels.com
-127.0.0.1 desktop.parallels.com
-127.0.0.1 download.parallels.com.cdn.cloudflare.net
-127.0.0.1 update.parallels.com.cdn.cloudflare.net
-127.0.0.1 desktop.parallels.com.cdn.cloudflare.net
-127.0.0.1 www.parallels.cn
-127.0.0.1 www.parallels.com
-127.0.0.1 reportus.parallels.com
-127.0.0.1 parallels.com
-127.0.0.1 parallels.cn
-127.0.0.1 pax-manager.myparallels.com
-127.0.0.1 myparallels.com
-127.0.0.1 my.parallels.com
+0.0.0.0 download.parallels.com
+0.0.0.0 update.parallels.com
+0.0.0.0 desktop.parallels.com
+0.0.0.0 download.parallels.com.cdn.cloudflare.net
+0.0.0.0 update.parallels.com.cdn.cloudflare.net
+0.0.0.0 desktop.parallels.com.cdn.cloudflare.net
+0.0.0.0 www.parallels.cn
+0.0.0.0 www.parallels.com
+0.0.0.0 reportus.parallels.com
+0.0.0.0 parallels.com
+0.0.0.0 parallels.cn
+0.0.0.0 pax-manager.myparallels.com
+0.0.0.0 myparallels.com
+0.0.0.0 my.parallels.com
 ```
 
 Parallels Desktop will uncomment hosts file, can use this command lock your hosts file:
