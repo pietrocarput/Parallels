@@ -20,7 +20,6 @@ PDFM_DISP_ENT="${BASE_PATH}/ParallelsService.entitlements"
 LICENSE_FILE="${BASE_PATH}/licenses.json"
 LICENSE_DST="/Library/Preferences/Parallels/licenses.json"
 
-PDFM_DISP_ORIGINAL_HASH="70b92c64c81c7992e901c2e23a2c2a08547e0d82f3b4fa28cc5f7e8bbac04cb6"
 PDFM_DISP_HASH="4793b6b9100f29dcae23fc28aa70208e0e39c5bb53a972aebeab12c015bcf913"
 LICENSE_HASH="ac735f3ee7ac815539f07e68561baceda858cf7ac5887feae863f10a60db3d79"
 
@@ -64,36 +63,38 @@ if [ "${FILE_HASH}" != "${LICENSE_HASH}" ]; then
   exit 4
 fi
 
-# check run as root
+# check root permission
 if [ "$EUID" -ne 0 ]; then
-  echo -e "${COLOR_ERR}[-] Please run as root.${NOCOLOR}"
-  echo -e "${COLOR_INFO}    eg. sudo ${NOCOLOR}$0"
-  exit 3
+  echo -e "${COLOR_ERR}[-] Not have root permission, run sudo.${NOCOLOR}"
+  exec sudo "$0" "$@"
+  exit $?
 fi
 
-echo -e "${COLOR_INFO}[*] Exit Parallels Desktop${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/Parallels Service" service_stop
-killall prl_client_app 2>/dev/null
-
-echo -e "${COLOR_INFO}[*] Start Parallels Service${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/Parallels Service" service_start
+# is prl_disp_service running?
+if ! pgrep -x "prl_disp_service" > /dev/null; then
+  echo -e "${COLOR_INFO}[*] Start Parallels Service${NOCOLOR}"
+  "${PDFM_DIR}/Contents/MacOS/Parallels Service" service_start 2>&1>/dev/null
+fi
 
 echo -e "${COLOR_INFO}[*] Exit Parallels Desktop account ...${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/prlsrvctl" web-portal signout 2>/dev/null
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" web-portal signout 2>&1>/dev/null
 
 echo -e "${COLOR_INFO}[*] Disable CEP ...${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/prlsrvctl" --cep off 2>/dev/null
-"${PDFM_DIR}/Contents/MacOS/prlsrvctl" --allow-attach-screenshots off 2>/dev/null
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --cep off 2>&1>/dev/null
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --allow-attach-screenshots off 2>&1>/dev/null
 
-echo -e "${COLOR_INFO}[*] Stop Parallels Service${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/Parallels Service" service_stop
+echo -e "${COLOR_INFO}[*] Exit Parallels Desktop${NOCOLOR}"
+"${PDFM_DIR}/Contents/MacOS/Parallels Service" service_stop 2>&1>/dev/null
+killall prl_client_app >/dev/null 2>&1
 
 echo -e "${COLOR_INFO}[*] Copy prl_disp_service${NOCOLOR}"
 
+chflags -R 0 "${PDFM_DISP_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 rm -f "${PDFM_DISP_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
-cp -X "${PDFM_DISP_CRACK}" "${PDFM_DISP_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
+cp "${PDFM_DISP_CRACK}" "${PDFM_DISP_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 chown root:wheel "${PDFM_DISP_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 chmod 755 "${PDFM_DISP_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
+chflags -R 0 "${PDFM_DISP_CRACK}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 
 # check hash
 FILE_HASH=$(shasum -a 256 -b "${PDFM_DISP_DST}" | awk '{print $1}')
@@ -114,9 +115,10 @@ if [ -f "${LICENSE_DST}" ]; then
   rm -f "${LICENSE_DST}" > /dev/null || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 fi
 
-cp -X "${LICENSE_FILE}" "${LICENSE_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
+cp -f "${LICENSE_FILE}" "${LICENSE_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 chown root:wheel "${LICENSE_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 chmod 444 "${LICENSE_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
+chflags -R 0 "${LICENSE_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 chflags uchg "${LICENSE_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 chflags schg "${LICENSE_DST}" || { echo -e "${COLOR_ERR}error $? at line $LINENO.${NOCOLOR}"; exit $?; }
 
