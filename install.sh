@@ -70,22 +70,11 @@ if [ "$EUID" -ne 0 ]; then
   exit $?
 fi
 
-# is prl_disp_service running?
-if ! pgrep -x "prl_disp_service" > /dev/null; then
+# if prl_disp_service running, stop it
+if pgrep -x "prl_disp_service" > /dev/null; then
   echo -e "${COLOR_INFO}[*] Start Parallels Service${NOCOLOR}"
-  "${PDFM_DIR}/Contents/MacOS/Parallels Service" service_start 2>&1>/dev/null
+  "${PDFM_DIR}/Contents/MacOS/Parallels Service" service_stop >/dev/null
 fi
-
-echo -e "${COLOR_INFO}[*] Exit Parallels Desktop account ...${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/prlsrvctl" web-portal signout 2>&1>/dev/null
-
-echo -e "${COLOR_INFO}[*] Disable CEP ...${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --cep off 2>&1>/dev/null
-"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --allow-attach-screenshots off 2>&1>/dev/null
-
-echo -e "${COLOR_INFO}[*] Exit Parallels Desktop${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/Parallels Service" service_stop 2>&1>/dev/null
-killall prl_client_app >/dev/null 2>&1
 
 echo -e "${COLOR_INFO}[*] Copy prl_disp_service${NOCOLOR}"
 
@@ -129,5 +118,18 @@ if [ "${FILE_HASH}" != "${LICENSE_HASH}" ]; then
   echo -e "${COLOR_ERR}[-] verify target file (${LICENSE_DST}) hash error.${NOCOLOR}"
   exit 1
 fi
+
+# is prl_disp_service not running, start it
+if ! pgrep -x "prl_disp_service" > /dev/null; then
+  echo -e "${COLOR_INFO}[*] Start Parallels Service${NOCOLOR}"
+  "${PDFM_DIR}/Contents/MacOS/Parallels Service" service_start >/dev/null
+fi
+
+echo -e "${COLOR_INFO}[*] Exit Parallels Desktop account ...${NOCOLOR}"
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" web-portal signout >/dev/null
+
+echo -e "${COLOR_INFO}[*] Disable CEP ...${NOCOLOR}"
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --cep off >/dev/null
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --allow-attach-screenshots off >/dev/null
 
 echo -e "${COLOR_INFO}[*] Crack over${NOCOLOR}"

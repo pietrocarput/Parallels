@@ -1,4 +1,4 @@
-# Parallels Desktop
+# Parallels Desktop Crack
 
 Crack for Parallels Desktop 18.0.2 53077
 
@@ -24,6 +24,10 @@ Crack for Parallels Desktop 18.0.2 53077
 If you got "Operation not permitted" error, enable "Full Disk Access" permission for your Terminal app.
 
 `System Preferences ▸ Security & Privacy ▸ Privacy ▸ Full Disk Access`
+
+If you got `codesign` error, ensure xcode command line tools installed. Install with command `xcode-select --install`.
+
+Check installed with `xcode-select -p` will output `/Library/Developer/CommandLineTools` or `/Applications/Xcode.app/Contents/Developer`.
 
 
 # Manual
@@ -69,23 +73,44 @@ Parallels Desktop may upload client info or logs to server.
 
 You can use a firewall, hosts or custom DNS block there domains.
 
+This prevents the built-in downloader from working, but you can download prebuilt Virtual Machines via
+* Apple Silicon
+    * https://update.parallels.com/desktop/v18/appliances_arm.xml
+    * https://update.parallels.com/desktop/v18/appliances_arm_Monterey.xml
+* Intel
+    * https://update.parallels.com/desktop/v18/appliances.xml
+
 ## Hosts
 
 ```
-0.0.0.0 download.parallels.com
-0.0.0.0 update.parallels.com
-0.0.0.0 desktop.parallels.com
-0.0.0.0 download.parallels.com.cdn.cloudflare.net
-0.0.0.0 update.parallels.com.cdn.cloudflare.net
-0.0.0.0 desktop.parallels.com.cdn.cloudflare.net
-0.0.0.0 www.parallels.cn
-0.0.0.0 www.parallels.com
-0.0.0.0 reportus.parallels.com
-0.0.0.0 parallels.com
-0.0.0.0 parallels.cn
-0.0.0.0 pax-manager.myparallels.com
-0.0.0.0 myparallels.com
-0.0.0.0 my.parallels.com
+127.0.0.1 download.parallels.com
+127.0.0.1 update.parallels.com
+127.0.0.1 desktop.parallels.com
+127.0.0.1 download.parallels.com.cdn.cloudflare.net
+127.0.0.1 update.parallels.com.cdn.cloudflare.net
+127.0.0.1 desktop.parallels.com.cdn.cloudflare.net
+127.0.0.1 www.parallels.cn
+127.0.0.1 www.parallels.com
+127.0.0.1 www.parallels.de
+127.0.0.1 www.parallels.es
+127.0.0.1 www.parallels.fr
+127.0.0.1 www.parallels.nl
+127.0.0.1 www.parallels.pt
+127.0.0.1 www.parallels.ru
+127.0.0.1 www.parallelskorea.com
+127.0.0.1 reportus.parallels.com
+127.0.0.1 parallels.cn
+127.0.0.1 parallels.com
+127.0.0.1 parallels.de
+127.0.0.1 parallels.es
+127.0.0.1 parallels.fr
+127.0.0.1 parallels.nl
+127.0.0.1 parallels.pt
+127.0.0.1 parallels.ru
+127.0.0.1 parallelskorea.com
+127.0.0.1 pax-manager.myparallels.com
+127.0.0.1 myparallels.com
+127.0.0.1 my.parallels.com
 ```
 
 Parallels Desktop will uncomment hosts file, can use this command lock your hosts file:
@@ -103,6 +128,13 @@ Add the following rules to your `Custom filtering rules`:
 ||myparallels.com^$important
 ||parallels.cn^$important
 ||parallels.com^$important
+||parallels.de^$important
+||parallels.es^$important
+||parallels.fr^$important
+||parallels.nl^$important
+||parallels.pt^$important
+||parallels.ru^$important
+||parallelskorea.com^$important
 ||parallels.com.cdn.cloudflare.net^$important
 ```
 
@@ -120,3 +152,7 @@ It's opensource, you can use any hex file comparison tool you like open `prl_dis
 ## I want to crack it myself.
 
 Check the `prl_disp_service.md` to see how I cracked it.
+
+## Where to get update?
+
+[https://icrack.day/pdfm](https://icrack.day/pdfm)
