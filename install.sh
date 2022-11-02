@@ -11,7 +11,7 @@ NOCOLOR='\033[0m'
 
 PDFM_DIR="/Applications/Parallels Desktop.app"
 PDFM_LOC="/Library/Preferences/Parallels/parallels-desktop.loc"
-PDFM_VER="18.0.2-53077"
+PDFM_VER="18.1.0-53311"
 
 PDFM_DISP_CRACK="${BASE_PATH}/prl_disp_service"
 PDFM_DISP_DST="${PDFM_DIR}/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
@@ -20,7 +20,8 @@ PDFM_DISP_ENT="${BASE_PATH}/ParallelsService.entitlements"
 LICENSE_FILE="${BASE_PATH}/licenses.json"
 LICENSE_DST="/Library/Preferences/Parallels/licenses.json"
 
-PDFM_DISP_HASH="4793b6b9100f29dcae23fc28aa70208e0e39c5bb53a972aebeab12c015bcf913"
+PDFM_DISP_ORIGIN_HASH="6bb637a2bfe289c6bd27ac63fd382b03587fb3b51547b627c8bdc9c5bd3684ba"
+PDFM_DISP_HASH="0942b5aaf9f3a2d742df5c2d87200133b4cdf739bbb39ae6e7119b57136e6ed7"
 LICENSE_HASH="ac735f3ee7ac815539f07e68561baceda858cf7ac5887feae863f10a60db3d79"
 
 # read location from parallels-desktop.loc
@@ -45,13 +46,22 @@ if [ "${PDFM_VER}" != "${VERSION_1}-${VERSION_2}" ]; then
   exit 2
 fi
 
+# check original prl_disp_service hash
+FILE_HASH=$(shasum -a 256 -b "${PDFM_DISP_DST}" | awk '{print $1}')
+if [ "${FILE_HASH}" != "${PDFM_DISP_ORIGIN_HASH}" ]; then
+  echo -e "${COLOR_ERR}[-] ${FILE_HASH} != ${PDFM_DISP_ORIGIN_HASH}${NOCOLOR}"
+  echo -e "${COLOR_ERR}[-] verify original file (prl_disp_service) hash error.${NOCOLOR}"
+  echo -e "${COLOR_ERR}[-] file has been modified, maybe already cracked.${NOCOLOR}"
+  exit 3
+fi
+
 # check prl_disp_service hash
 FILE_HASH=$(shasum -a 256 -b "${PDFM_DISP_CRACK}" | awk '{print $1}')
 if [ "${FILE_HASH}" != "${PDFM_DISP_HASH}" ]; then
   echo -e "${COLOR_ERR}[-] ${FILE_HASH} != ${PDFM_DISP_HASH}${NOCOLOR}"
   echo -e "${COLOR_ERR}[-] verify crack file (prl_disp_service) hash error.${NOCOLOR}"
   echo -e "${COLOR_ERR}[-] please re-download crack files.${NOCOLOR}"
-  exit 4
+  exit 3
 fi
 
 # check licenses.json hash
@@ -67,13 +77,21 @@ fi
 if [ "$EUID" -ne 0 ]; then
   echo -e "${COLOR_ERR}[-] Not have root permission, run sudo.${NOCOLOR}"
   exec sudo "$0" "$@"
-  exit $?
+  exit 5
 fi
 
 # if prl_disp_service running, stop it
-if pgrep -x "prl_disp_service" > /dev/null; then
-  echo -e "${COLOR_INFO}[*] Start Parallels Service${NOCOLOR}"
-  "${PDFM_DIR}/Contents/MacOS/Parallels Service" service_stop >/dev/null
+if pgrep -x "prl_disp_service" &> /dev/null; then
+  echo -e "${COLOR_INFO}[*] Stop Parallels Desktop${NOCOLOR}"
+  pkill -9 prl_client_app &>/dev/null
+  # ensure prl_disp_service stop
+  "${PDFM_DIR}/Contents/MacOS/Parallels Service" service_stop &>/dev/null
+  sleep 1
+  launchctl stop /Library/LaunchDaemons/com.parallels.desktop.launchdaemon.plist &>/dev/null
+  sleep 1
+  pkill -9 prl_disp_service &>/dev/null
+  sleep 1
+  rm -f "/var/run/prl_*"
 fi
 
 echo -e "${COLOR_INFO}[*] Copy prl_disp_service${NOCOLOR}"
@@ -90,7 +108,7 @@ FILE_HASH=$(shasum -a 256 -b "${PDFM_DISP_DST}" | awk '{print $1}')
 if [ "${FILE_HASH}" != "${PDFM_DISP_HASH}" ]; then
   echo -e "${COLOR_ERR}[-] ${FILE_HASH} != ${PDFM_DISP_HASH}${NOCOLOR}"
   echo -e "${COLOR_ERR}[-] verify target file (prl_disp_service) hash error.${NOCOLOR}"
-  exit 4
+  exit 6
 fi
 
 echo -e "${COLOR_INFO}[*] Sign prl_disp_service${NOCOLOR}"
@@ -116,20 +134,38 @@ FILE_HASH=$(shasum -a 256 -b "${LICENSE_DST}" | awk '{print $1}')
 if [ "${FILE_HASH}" != "${LICENSE_HASH}" ]; then
   echo -e "${COLOR_ERR}[-] ${FILE_HASH} != ${LICENSE_HASH}${NOCOLOR}"
   echo -e "${COLOR_ERR}[-] verify target file (${LICENSE_DST}) hash error.${NOCOLOR}"
-  exit 1
+  exit 7
 fi
 
 # is prl_disp_service not running, start it
-if ! pgrep -x "prl_disp_service" > /dev/null; then
+if ! pgrep -x "prl_disp_service" &>/dev/null; then
   echo -e "${COLOR_INFO}[*] Start Parallels Service${NOCOLOR}"
-  "${PDFM_DIR}/Contents/MacOS/Parallels Service" service_start >/dev/null
+  "${PDFM_DIR}/Contents/MacOS/Parallels Service" service_restart &>/dev/null
+  for (( i=0; i < 10; ++i ))
+  do
+    if pgrep -x "prl_disp_service" &>/dev/null; then
+      break
+    fi
+    sleep 1
+  done
+  if ! pgrep -x "prl_disp_service" &>/dev/null; then
+    echo -e "${COLOR_ERR}[x] Start Service fail.${NOCOLOR}"
+  fi
+fi
+
+VALID_INFO="License: state='valid' restricted='false'"
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" info | grep "${VALID_INFO}" &>/dev/null
+if [ $? != 0 ]; then
+  echo -e "${COLOR_ERR}[x] Crack fail, please retry it.${NOCOLOR}"
+  exit 9
 fi
 
 echo -e "${COLOR_INFO}[*] Exit Parallels Desktop account ...${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/prlsrvctl" web-portal signout >/dev/null
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" web-portal signout &>/dev/null
 
 echo -e "${COLOR_INFO}[*] Disable CEP ...${NOCOLOR}"
-"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --cep off >/dev/null
-"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --allow-attach-screenshots off >/dev/null
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --cep off &>/dev/null
+"${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --allow-attach-screenshots off &>/dev/null
 
-echo -e "${COLOR_INFO}[*] Crack over${NOCOLOR}"
+echo -e "${COLOR_INFO}[*] Crack success.${NOCOLOR}"
+
