@@ -11,7 +11,7 @@ NOCOLOR='\033[0m'
 
 PDFM_DIR="/Applications/Parallels Desktop.app"
 PDFM_LOC="/Library/Preferences/Parallels/parallels-desktop.loc"
-PDFM_VER="18.1.0-53311"
+PDFM_VER="18.1.1-53328"
 
 PDFM_DISP_CRACK="${BASE_PATH}/prl_disp_service"
 PDFM_DISP_DST="${PDFM_DIR}/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
@@ -20,8 +20,8 @@ PDFM_DISP_ENT="${BASE_PATH}/ParallelsService.entitlements"
 LICENSE_FILE="${BASE_PATH}/licenses.json"
 LICENSE_DST="/Library/Preferences/Parallels/licenses.json"
 
-PDFM_DISP_ORIGIN_HASH="6bb637a2bfe289c6bd27ac63fd382b03587fb3b51547b627c8bdc9c5bd3684ba"
-PDFM_DISP_HASH="0942b5aaf9f3a2d742df5c2d87200133b4cdf739bbb39ae6e7119b57136e6ed7"
+PDFM_DISP_ORIGIN_HASH="70dcdf678c3af759134e1b3dffba40b4ae671a0e297a4c1b83a04e45d5c271be"
+PDFM_DISP_HASH="a9678c5edd4afc203253b23baaa5344d77ceb939ca8f5023c4bbc4bc91605cb1"
 LICENSE_HASH="ac735f3ee7ac815539f07e68561baceda858cf7ac5887feae863f10a60db3d79"
 
 # read location from parallels-desktop.loc

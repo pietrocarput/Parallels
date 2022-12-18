@@ -1,6 +1,6 @@
 # Parallels Desktop Crack
 
-Crack for Parallels Desktop 18.1.0 53311
+Crack for Parallels Desktop 18.1.1 53328
 
 - [x] Support Intel
 - [x] Support Apple Silicon (M1 & M2)
@@ -11,7 +11,7 @@ Crack for Parallels Desktop 18.1.0 53311
 
 1. Install Parallels Desktop.
 
-    https://download.parallels.com/desktop/v18/18.1.0-53311/ParallelsDesktop-18.1.0-53311.dmg
+    https://download.parallels.com/desktop/v18/18.1.1-53328/ParallelsDesktop-18.1.1-53328.dmg
 
 2. Exit parallels account.
 
