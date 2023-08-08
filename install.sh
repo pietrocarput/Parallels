@@ -16,16 +16,14 @@ PDFM_DIR="/Applications/Parallels Desktop.app"
 LICENSE_FILE="${BASE_PATH}/licenses.json"
 LICENSE_DST="/Library/Preferences/Parallels/licenses.json"
 
-PDFM_DISP_DST="${PDFM_DIR}/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service"
-PDFM_DISP_BCUP="${PDFM_DIR}/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service_bcup"
-PDFM_DISP_PATCH="${PDFM_DIR}/Contents/MacOS/Parallels Service.app/Contents/MacOS/prl_disp_service_patched"
+PDFM_DISP_DIR="${PDFM_DIR}/Contents/MacOS/Parallels Service.app/Contents/MacOS"
+PDFM_DISP_DST="${PDFM_DISP_DIR}/prl_disp_service"
+PDFM_DISP_BCUP="${PDFM_DISP_DST}_bcup"
+PDFM_DISP_PATCH="${PDFM_DISP_DST}_patched"
 PDFM_DISP_ENT="${BASE_PATH}/ParallelsService.entitlements"
 
 TMP_DIR="${BASE_PATH}/tmp"
 ARM64_RET_1="${TMP_DIR}/arm64_ret_1"
-
-echo -e "${COLOR_INFO}[ Proof of Concept ]${NOCOLOR}"
-echo -e "${COLOR_INFO}${PDFM_VER} with Library Verification${NOCOLOR}"
 
 # check arch
 arch=$(uname -m)
@@ -128,4 +126,6 @@ fi
 "${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --cep off &>/dev/null
 "${PDFM_DIR}/Contents/MacOS/prlsrvctl" set --allow-attach-screenshots off &>/dev/null
 
-echo -e "${COLOR_WARN}[*] Remember to run use-stock.sh, after starting the Parallels launcher, before running a Virtual Machine${NOCOLOR}"
+chown -R "$(id -un)":admin "${PDFM_DISP_DIR}"
+
+echo -e "${COLOR_WARN}Remember to start Parallels using \"Launch Parallels.command\"${NOCOLOR}"
