@@ -24,6 +24,7 @@ PDFM_DISP_ENT="${BASE_PATH}/ParallelsService.entitlements"
 
 TMP_DIR="${BASE_PATH}/tmp"
 ARM64_RET_1="${TMP_DIR}/arm64_ret_1"
+X86_64_RET_1="${TMP_DIR}/x86_64_ret_1"
 
 # check arch
 arch=$(uname -m)
@@ -65,13 +66,14 @@ fi
 echo -e "${COLOR_INFO}[*] Installing...${NOCOLOR}"
 
 # prepare temp folder and files
-if [ ! -d "${TMP_DIR}" ] 
-then
+if [ ! -d "${TMP_DIR}" ]; then
     mkdir "${TMP_DIR}"
 fi
-if [ ! -f "${ARM64_RET_1}" ] 
-then
+if [ ! -f "${ARM64_RET_1}" ]; then
     echo -n -e '\x20\x0\x80\xd2\xc0\x03\x5f\xd6' > "${ARM64_RET_1}"
+fi
+if [ ! -f "${X86_64_RET_1}" ]; then
+    echo -n -e '\x6a\x01\x58\xc3' > "${X86_64_RET_1}"
 fi
 
 # patch prl_disp_service
@@ -80,12 +82,18 @@ then
     cp "${PDFM_DISP_DST}" "${PDFM_DISP_BCUP}"
 fi
 chflags -R 0 "${PDFM_DISP_DST}"
-# signcheckerimpl
+# arm64 signcheckerimpl
 # 0x10b1000
 dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=17502208 conv=notrunc
-# codesign
+# arm64 codesign
 # 0x12867d4
 dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=19425236 conv=notrunc
+# x86_64 signcheckerimpl
+# 0x5b8350
+dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=5997392 conv=notrunc
+# x86_64 codesign
+# 0x7d1000
+dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=8196096 conv=notrunc
 chown root:wheel "${PDFM_DISP_DST}"
 chmod 755 "${PDFM_DISP_DST}"
 codesign -f -s - --timestamp=none --all-architectures --entitlements "${PDFM_DISP_ENT}" "${PDFM_DISP_DST}"

@@ -2,9 +2,10 @@
 Crack for Parallels Desktop 18.3.2-53621
 
 ✅ ARM64<br>
-❌ x86_64 (coming soon)<br>
+✅ x86_64<br>
 ✅ Network<br>
-✅ USB
+✅ USB<br>
+✅ System Integrity Protection (SIP)
 ## Usage
 1. Install Parallels Desktop:<br>
    https://download.parallels.com/desktop/v18/18.3.2-53621/ParallelsDesktop-18.3.2-53621.dmg
