@@ -26,13 +26,6 @@ TMP_DIR="${BASE_PATH}/tmp"
 ARM64_RET_1="${TMP_DIR}/arm64_ret_1"
 X86_64_RET_1="${TMP_DIR}/x86_64_ret_1"
 
-# check arch
-arch=$(uname -m)
-if [ ! "$arch" == 'arm64' ]; then
-  echo -e "${COLOR_ERR}[-] This script is currently only for arm64.${NOCOLOR}"
-  exit 1
-fi
-
 # check parallels desktop version
 VERSION_1=$(defaults read "${PDFM_DIR}/Contents/Info.plist" CFBundleShortVersionString)
 VERSION_2=$(defaults read "${PDFM_DIR}/Contents/Info.plist" CFBundleVersion)
