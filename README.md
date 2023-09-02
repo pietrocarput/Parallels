@@ -54,3 +54,11 @@ You also wan't too block Parallels Servers.
 ```
 Parallels Desktop will uncomment these, therefore one needs to lock the hosts file:
 `sudo chflags uchg /etc/hosts && sudo chflags schg /etc/hosts`
+### OS download
+You will not be able to download operating systems in the Control Center anymore. Comment these out to get this functionality:
+```
+# 127.0.0.1 download.parallels.com
+# 127.0.0.1 desktop.parallels.com
+# 127.0.0.1 download.parallels.com.cdn.cloudflare.net
+# 127.0.0.1 desktop.parallels.com.cdn.cloudflare.net
+```
