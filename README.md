@@ -1,5 +1,5 @@
 # Parallels Desktop Crack
-Crack for Parallels Desktop 18.3.2-53621
+Crack for Parallels Desktop 19.0.0-54570
 
 ✅ ARM64<br>
 ✅ x86_64<br>
@@ -8,7 +8,7 @@ Crack for Parallels Desktop 18.3.2-53621
 ✅ System Integrity Protection (SIP)
 ## Usage
 1. Install Parallels Desktop:<br>
-   https://download.parallels.com/desktop/v18/18.3.2-53621/ParallelsDesktop-18.3.2-53621.dmg
+   https://download.parallels.com/desktop/v19/19.0.0-54570/ParallelsDesktop-19.0.0-54570.dmg
 3. Sign out your'e account
 4. `chmod +x install.sh && chmod +x Launch\ Parallels.command && sudo ./install.sh`
 5. Double click `Launch Parallels.command`

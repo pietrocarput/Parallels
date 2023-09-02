@@ -10,7 +10,7 @@ BASE_PATH=$(
   pwd
 )
 
-PDFM_VER="18.3.2-53621"
+PDFM_VER="19.0.0-54570"
 PDFM_DIR="/Applications/Parallels Desktop.app"
 
 LICENSE_FILE="${BASE_PATH}/licenses.json"
@@ -76,17 +76,17 @@ then
 fi
 chflags -R 0 "${PDFM_DISP_DST}"
 # arm64 signcheckerimpl
-# 0x10b1000
-dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=17502208 conv=notrunc
+# 0x10a44a8
+dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=17450152 conv=notrunc
 # arm64 codesign
-# 0x12867d4
-dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=19425236 conv=notrunc
+# 0x127a55c
+dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=19375452 conv=notrunc
 # x86_64 signcheckerimpl
-# 0x5b8350
-dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=5997392 conv=notrunc
+# 0x5b1530
+dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=5969200 conv=notrunc
 # x86_64 codesign
-# 0x7d1000
-dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=8196096 conv=notrunc
+# 0x7c85d0
+dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=8160720 conv=notrunc
 chown root:wheel "${PDFM_DISP_DST}"
 chmod 755 "${PDFM_DISP_DST}"
 codesign -f -s - --timestamp=none --all-architectures --entitlements "${PDFM_DISP_ENT}" "${PDFM_DISP_DST}"
