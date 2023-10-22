@@ -15,13 +15,13 @@ Crack for Parallels Desktop 19.0.0-54570
 
 You will always need to use this launcher as a workaround to prevent signature errors from occurring. However, if you are a developer with permission to use com.apple.vm.* or are willing to disable System Integrity Protection, there is a better approach available.
 ### Operation not permitted
-Enable `System Preferences ▸ Security & Privacy ▸ Privacy ▸ Full Disk Access`
+Enable `System Preferences ▸ Privacy & Security ▸ Full Disk Access ▸ Terminal`
 ### codesign error
 Ensure xcode command line tools installed. Install it with using the command `xcode-select --install`.
 
 Check installation with `xcode-select -p`, which will output `/Library/Developer/CommandLineTools` or `/Applications/Xcode.app/Contents/Developer`.
 ## Hosts
-You also wan't too block Parallels Servers.
+You also wan't to block Parallels Servers.
 ```
 127.0.0.1 download.parallels.com
 127.0.0.1 update.parallels.com
@@ -54,6 +54,9 @@ You also wan't too block Parallels Servers.
 ```
 Parallels Desktop will uncomment these, therefore one needs to lock the hosts file:
 `sudo chflags uchg /etc/hosts && sudo chflags schg /etc/hosts`
+Unlock:
+`sudo chflags nouchg /etc/hosts && sudo chflags noschg /etc/hosts`
+and 
 ### OS download
 You will not be able to download operating systems in the Control Center anymore. Comment these out to get this functionality:
 ```
