@@ -1,14 +1,14 @@
 # Parallels Desktop Crack
-Crack for Parallels Desktop 19.0.0-54570
+Crack for Parallels Desktop 19.1.0-54729
 
 ✅ ARM64<br>
-✅ x86_64<br>
+🔄 x86_64 (19.0.0-54570) until 6d73511827924b3bcaf1c262f59a4abfc19d4f07<br>
 ✅ Network<br>
 ✅ USB<br>
 ✅ System Integrity Protection (SIP)
 ## Usage
 1. Install Parallels Desktop:<br>
-   https://download.parallels.com/desktop/v19/19.0.0-54570/ParallelsDesktop-19.0.0-54570.dmg
+   https://download.parallels.com/desktop/v19/19.1.0-54729/ParallelsDesktop-19.1.0-54729.dmg
 3. Sign out your'e account
 4. `chmod +x install.sh && chmod +x Launch\ Parallels.command && sudo ./install.sh`
 5. Double click `Launch Parallels.command`

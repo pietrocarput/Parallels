@@ -10,7 +10,7 @@ BASE_PATH=$(
   pwd
 )
 
-PDFM_VER="19.0.0-54570"
+PDFM_VER="19.1.0-54729"
 PDFM_DIR="/Applications/Parallels Desktop.app"
 
 LICENSE_FILE="${BASE_PATH}/licenses.json"
@@ -24,7 +24,8 @@ PDFM_DISP_ENT="${BASE_PATH}/ParallelsService.entitlements"
 
 TMP_DIR="${BASE_PATH}/tmp"
 ARM64_RET_1="${TMP_DIR}/arm64_ret_1"
-X86_64_RET_1="${TMP_DIR}/x86_64_ret_1"
+ARM64_B_0xC="${TMP_DIR}/arm64_b_0xC"
+ARM64_B_0x10="${TMP_DIR}/arm64_b_0x10"
 
 # check parallels desktop version
 VERSION_1=$(defaults read "${PDFM_DIR}/Contents/Info.plist" CFBundleShortVersionString)
@@ -62,31 +63,32 @@ echo -e "${COLOR_INFO}[*] Installing...${NOCOLOR}"
 if [ ! -d "${TMP_DIR}" ]; then
     mkdir "${TMP_DIR}"
 fi
-if [ ! -f "${ARM64_RET_1}" ]; then
-    echo -n -e '\x20\x0\x80\xd2\xc0\x03\x5f\xd6' > "${ARM64_RET_1}"
-fi
-if [ ! -f "${X86_64_RET_1}" ]; then
-    echo -n -e '\x6a\x01\x58\xc3' > "${X86_64_RET_1}"
-fi
+echo -n -e '\x20\x00\x80\xd2\xc0\x03\x5f\xd6' > "${ARM64_RET_1}"
+echo -n -e '\x04\x00\x00\x14' > "${ARM64_B_0x10}"
+echo -n -e '\x03\x00\x00\x14' > "${ARM64_B_0xC}"
 
 # patch prl_disp_service
-if [ ! -f "${PDFM_DISP_BCUP}" ] 
-then
+if [ ! -f "${PDFM_DISP_BCUP}" ]; then
     cp "${PDFM_DISP_DST}" "${PDFM_DISP_BCUP}"
 fi
 chflags -R 0 "${PDFM_DISP_DST}"
-# arm64 signcheckerimpl
-# 0x10a44a8
-dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=17450152 conv=notrunc
-# arm64 codesign
-# 0x127a55c
-dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=19375452 conv=notrunc
-# x86_64 signcheckerimpl
-# 0x5b1530
-dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=5969200 conv=notrunc
-# x86_64 codesign
-# 0x7c85d0
-dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=8160720 conv=notrunc
+
+# arm64 bypass public key loading erros
+# 0xDF6928
+dd if="${ARM64_B_0x10}" of="${PDFM_DISP_DST}" obs=1 seek=14641448 conv=notrunc
+
+# arm64 party bypass license info loading errors
+# 0xDF696C
+dd if="${ARM64_B_0xC}" of="${PDFM_DISP_DST}" obs=1 seek=14641516 conv=notrunc
+
+# arm64 bypass license signature check
+# 0x1066D84
+dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=17198468 conv=notrunc
+
+# arm64 bypass binary codesign check
+# 0x12366D4
+dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=19097300 conv=notrunc
+
 chown root:wheel "${PDFM_DISP_DST}"
 chmod 755 "${PDFM_DISP_DST}"
 codesign -f -s - --timestamp=none --all-architectures --entitlements "${PDFM_DISP_ENT}" "${PDFM_DISP_DST}"
