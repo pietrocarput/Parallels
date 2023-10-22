@@ -1,27 +1,27 @@
 # Parallels Desktop Crack
-Crack for Parallels Desktop 19.0.0-54570
+Crack for Parallels Desktop 19.1.0-54729
 
 ✅ ARM64<br>
-✅ x86_64<br>
+🔄 x86_64 (coming soon) - use 19.0.0-54570 [6d73511827924b3bcaf1c262f59a4abfc19d4f07](https://github.com/trueToastedCode/ParallelsLab/tree/6d73511827924b3bcaf1c262f59a4abfc19d4f07)<br>
 ✅ Network<br>
 ✅ USB<br>
 ✅ System Integrity Protection (SIP)
 ## Usage
 1. Install Parallels Desktop:<br>
-   https://download.parallels.com/desktop/v19/19.0.0-54570/ParallelsDesktop-19.0.0-54570.dmg
+   https://download.parallels.com/desktop/v19/19.1.0-54729/ParallelsDesktop-19.1.0-54729.dmg
 3. Sign out your'e account
 4. `chmod +x install.sh && chmod +x Launch\ Parallels.command && sudo ./install.sh`
 5. Double click `Launch Parallels.command`
 
 You will always need to use this launcher as a workaround to prevent signature errors from occurring. However, if you are a developer with permission to use com.apple.vm.* or are willing to disable System Integrity Protection, there is a better approach available.
 ### Operation not permitted
-Enable `System Preferences ▸ Security & Privacy ▸ Privacy ▸ Full Disk Access`
+Enable `System Preferences ▸ Privacy & Security ▸ Full Disk Access ▸ Terminal`
 ### codesign error
 Ensure xcode command line tools installed. Install it with using the command `xcode-select --install`.
 
 Check installation with `xcode-select -p`, which will output `/Library/Developer/CommandLineTools` or `/Applications/Xcode.app/Contents/Developer`.
 ## Hosts
-You also wan't too block Parallels Servers.
+You also wan't to block Parallels Servers.
 ```
 127.0.0.1 download.parallels.com
 127.0.0.1 update.parallels.com
@@ -52,8 +52,10 @@ You also wan't too block Parallels Servers.
 127.0.0.1 myparallels.com
 127.0.0.1 my.parallels.com
 ```
-Parallels Desktop will uncomment these, therefore one needs to lock the hosts file:
-`sudo chflags uchg /etc/hosts && sudo chflags schg /etc/hosts`
+Parallels Desktop will uncomment these, therefore one needs to lock the hosts file:<br>
+`sudo chflags uchg /etc/hosts && sudo chflags schg /etc/hosts`<br>
+Unlock:<br>
+`sudo chflags nouchg /etc/hosts && sudo chflags noschg /etc/hosts`
 ### OS download
 You will not be able to download operating systems in the Control Center anymore. Comment these out to get this functionality:
 ```
