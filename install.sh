@@ -23,9 +23,14 @@ PDFM_DISP_PATCH="${PDFM_DISP_DST}_patched"
 PDFM_DISP_ENT="${BASE_PATH}/ParallelsService.entitlements"
 
 TMP_DIR="${BASE_PATH}/tmp"
+
 ARM64_RET_1="${TMP_DIR}/arm64_ret_1"
 ARM64_B_0xC="${TMP_DIR}/arm64_b_0xC"
 ARM64_B_0x10="${TMP_DIR}/arm64_b_0x10"
+
+X86_64_JMP_0x17="${TMP_DIR}/x86_64_jmp_0x17"
+X86_64_JMP_0xA="${TMP_DIR}/x86_64_jmp_0xa"
+X86_64_RET_1="${TMP_DIR}/x86_64_ret_1"
 
 # check parallels desktop version
 VERSION_1=$(defaults read "${PDFM_DIR}/Contents/Info.plist" CFBundleShortVersionString)
@@ -63,15 +68,22 @@ echo -e "${COLOR_INFO}[*] Installing...${NOCOLOR}"
 if [ ! -d "${TMP_DIR}" ]; then
     mkdir "${TMP_DIR}"
 fi
+
 echo -n -e '\x20\x00\x80\xd2\xc0\x03\x5f\xd6' > "${ARM64_RET_1}"
 echo -n -e '\x04\x00\x00\x14' > "${ARM64_B_0x10}"
 echo -n -e '\x03\x00\x00\x14' > "${ARM64_B_0xC}"
+
+echo -n -e '\xeb\x15' > "${X86_64_JMP_0x17}"
+echo -n -e '\xeb\x08' > "${X86_64_JMP_0xA}"
+echo -n -e '\x6a\x01\x58\xc3' > "${X86_64_RET_1}"
 
 # patch prl_disp_service
 if [ ! -f "${PDFM_DISP_BCUP}" ]; then
     cp "${PDFM_DISP_DST}" "${PDFM_DISP_BCUP}"
 fi
 chflags -R 0 "${PDFM_DISP_DST}"
+
+# [ ARM64 ]
 
 # arm64 bypass public key loading erros
 # 0xDF6928
@@ -88,6 +100,24 @@ dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=17198468 conv=notrunc
 # arm64 bypass binary codesign check
 # 0x12366D4
 dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=19097300 conv=notrunc
+
+# [ x86_64 ]
+
+# x86_64 bypass public key loading erros
+# 0x33AB95
+dd if="${X86_64_JMP_0x17}" of="${PDFM_DISP_DST}" obs=1 seek=3386261 conv=notrunc
+
+# arm64 party bypass license info loading errors
+# 0x33ABDE
+dd if="${X86_64_JMP_0xA}" of="${PDFM_DISP_DST}" obs=1 seek=3386334 conv=notrunc
+
+# X86_64 bypass license signature check
+# 0x59AF00
+dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=5877504 conv=notrunc
+
+# X86_64 bypass binary codesign check
+# 0x7ABE20
+dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=8044064 conv=notrunc
 
 chown root:wheel "${PDFM_DISP_DST}"
 chmod 755 "${PDFM_DISP_DST}"

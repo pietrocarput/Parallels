@@ -2,7 +2,7 @@
 Crack for Parallels Desktop 19.1.0-54729
 
 ✅ ARM64<br>
-🔄 x86_64 (coming soon) - use 19.0.0-54570 [6d73511827924b3bcaf1c262f59a4abfc19d4f07](https://github.com/trueToastedCode/ParallelsLab/tree/6d73511827924b3bcaf1c262f59a4abfc19d4f07)<br>
+✅ x86_64<br>
 ✅ Network<br>
 ✅ USB<br>
 ✅ System Integrity Protection (SIP)
