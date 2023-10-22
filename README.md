@@ -2,7 +2,7 @@
 Crack for Parallels Desktop 19.1.0-54729
 
 ✅ ARM64<br>
-🔄 x86_64 (19.0.0-54570) until 6d73511827924b3bcaf1c262f59a4abfc19d4f07<br>
+🔄 x86_64 (coming soon) - use 19.0.0-54570 [6d73511827924b3bcaf1c262f59a4abfc19d4f07](https://github.com/trueToastedCode/ParallelsLab/tree/6d73511827924b3bcaf1c262f59a4abfc19d4f07)<br>
 ✅ Network<br>
 ✅ USB<br>
 ✅ System Integrity Protection (SIP)
@@ -52,11 +52,10 @@ You also wan't to block Parallels Servers.
 127.0.0.1 myparallels.com
 127.0.0.1 my.parallels.com
 ```
-Parallels Desktop will uncomment these, therefore one needs to lock the hosts file:
-`sudo chflags uchg /etc/hosts && sudo chflags schg /etc/hosts`
-Unlock:
+Parallels Desktop will uncomment these, therefore one needs to lock the hosts file:<br>
+`sudo chflags uchg /etc/hosts && sudo chflags schg /etc/hosts`<br>
+Unlock:<br>
 `sudo chflags nouchg /etc/hosts && sudo chflags noschg /etc/hosts`
-and 
 ### OS download
 You will not be able to download operating systems in the Control Center anymore. Comment these out to get this functionality:
 ```
