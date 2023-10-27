@@ -32,6 +32,17 @@ X86_64_JMP_0x17="${TMP_DIR}/x86_64_jmp_0x17"
 X86_64_JMP_0xA="${TMP_DIR}/x86_64_jmp_0xa"
 X86_64_RET_1="${TMP_DIR}/x86_64_ret_1"
 
+SUBM_DIR="${BASE_PATH}/submodules"
+
+INSERT_DYLIB_DIR="${SUBM_DIR}/insert_dylib"
+INSERT_DYLIB_PRJ="${INSERT_DYLIB_DIR}/insert_dylib.xcodeproj"
+INSERT_DYLIB_BIN="${INSERT_DYLIB_DIR}/build/Release/insert_dylib"
+
+HOOK_PARALLELS_DIR="${SUBM_DIR}/hook_parallels"
+HOOK_PARALLELS_PRJ="${HOOK_PARALLELS_DIR}/HookParallels.xcodeproj"
+HOOK_PARALLELS_DYLIB="${HOOK_PARALLELS_DIR}/build/Release/libHookParallels.dylib"
+HOOK_PARALLELS_DYLIB_DST="${PDFM_DISP_DIR}/libHookParallels.dylib"
+
 # check parallels desktop version
 VERSION_1=$(defaults read "${PDFM_DIR}/Contents/Info.plist" CFBundleShortVersionString)
 VERSION_2=$(defaults read "${PDFM_DIR}/Contents/Info.plist" CFBundleVersion)
@@ -46,6 +57,31 @@ if [ "$EUID" -ne 0 ]; then
   echo -e "${COLOR_ERR}[-] Missing root permission, run sudo.${NOCOLOR}"
   exec sudo "$0" "$@"
   exit 5
+fi
+
+if [ ! -d "$INSERT_DYLIB_PRJ" ] || [ ! -d "$HOOK_PARALLELS_PRJ" ]; then
+  echo -e "${COLOR_ERR}[-] Missing submodule files, perhaps you forgot to execute \"git submodule update --init --recursive\"${NOCOLOR}"
+  exit 2
+fi
+
+echo -e "${COLOR_INFO}[*] Compiling...${NOCOLOR}"
+
+# compile insert_dylib
+if [ ! -f "$INSERT_DYLIB_BIN" ]; then
+  xcodebuild -project "$INSERT_DYLIB_PRJ"
+  if [ ! -f "$INSERT_DYLIB_BIN" ]; then
+    echo -e "${COLOR_ERR}[-] Compiled insert_dylib binary not found.${NOCOLOR}"
+    exit 2
+  fi
+fi
+
+# compile HookMac
+if [ ! -f "$HOOK_PARALLELS_DYLIB" ]; then
+  xcodebuild -project "$HOOK_PARALLELS_PRJ"
+  if [ ! -f "$HOOK_PARALLELS_DYLIB" ]; then
+    echo -e "${COLOR_ERR}[-] Compiled HookMac.dylib not found.${NOCOLOR}"
+    exit 2
+  fi
 fi
 
 # stop prl_disp_service
@@ -81,15 +117,16 @@ echo -n -e '\x6a\x01\x58\xc3' > "${X86_64_RET_1}"
 if [ ! -f "${PDFM_DISP_BCUP}" ]; then
     cp "${PDFM_DISP_DST}" "${PDFM_DISP_BCUP}"
 fi
+
 chflags -R 0 "${PDFM_DISP_DST}"
 
 # [ ARM64 ]
 
-# arm64 bypass public key loading erros
+# arm64 bypass public key loading errors
 # 0xDF6928
 dd if="${ARM64_B_0x10}" of="${PDFM_DISP_DST}" obs=1 seek=14641448 conv=notrunc
 
-# arm64 party bypass license info loading errors
+# arm64 partly bypass license info loading errors
 # 0xDF696C
 dd if="${ARM64_B_0xC}" of="${PDFM_DISP_DST}" obs=1 seek=14641516 conv=notrunc
 
@@ -103,11 +140,11 @@ dd if="${ARM64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=19097300 conv=notrunc
 
 # [ x86_64 ]
 
-# x86_64 bypass public key loading erros
+# x86_64 bypass public key loading errors
 # 0x33AB95
 dd if="${X86_64_JMP_0x17}" of="${PDFM_DISP_DST}" obs=1 seek=3386261 conv=notrunc
 
-# arm64 party bypass license info loading errors
+# arm64 partly bypass license info loading errors
 # 0x33ABDE
 dd if="${X86_64_JMP_0xA}" of="${PDFM_DISP_DST}" obs=1 seek=3386334 conv=notrunc
 
@@ -118,6 +155,10 @@ dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=5877504 conv=notrunc
 # X86_64 bypass binary codesign check
 # 0x7ABE20
 dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=8044064 conv=notrunc
+
+# insert HookMa dylib
+cp "$HOOK_PARALLELS_DYLIB" "$HOOK_PARALLELS_DYLIB_DST"
+"$INSERT_DYLIB_BIN" --no-strip-codesig --inplace "$HOOK_PARALLELS_DYLIB_DST" "$PDFM_DISP_DST"
 
 chown root:wheel "${PDFM_DISP_DST}"
 chmod 755 "${PDFM_DISP_DST}"
@@ -161,4 +202,5 @@ fi
 
 chown -R "$(id -un)":admin "${PDFM_DISP_DIR}"
 
-echo -e "${COLOR_WARN}Remember to start Parallels using \"Launch Parallels.command\"${NOCOLOR}"
+echo -e "${COLOR_WARN}⚠ Don't fully quit and reopen Parallels very quickly. It's automatically resetting the crack using hooked functions but this may break it ⚠${NOCOLOR}"
+echo -e "${COLOR_WARN}🔧 In case you're crack stops working, reset it using \"reset.command\" 🔧${NOCOLOR}"
