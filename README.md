@@ -6,11 +6,22 @@ Crack for Parallels Desktop 19.1.0-54729
 ✅ Network<br>
 ✅ USB<br>
 ✅ System Integrity Protection (SIP)
+
+🎉 Finally fully automatic. Previously there was a launcher that one had to use on every launch. 🎉
 ## Usage
 1. Install Parallels Desktop:<br>
    https://download.parallels.com/desktop/v19/19.1.0-54729/ParallelsDesktop-19.1.0-54729.dmg
-3. Sign out your'e account
-4. `git submodule update --init --recursive && chmod +x install.sh && chmod +x Launch\ Parallels.command && sudo ./install.sh`
+2. Sign out your'e account
+3. Install [Xcode from the App Store](https://apps.apple.com/us/app/xcode/id497799835?mt=12)<br>
+   **Open it afterwards and install the default components (iOS and MacOS which cannot be unchecked)**
+4. `git submodule update --init --recursive && chmod +x install.sh && chmod +x reset.command && sudo ./install.sh`
+
+### Important sidenotes
+**⚠ Don't fully quit and reopen Parallels very quickly ⚠**<br>
+*It's automatically resetting the crack using hooked functions but this may break it*
+
+**🔧 In case you're crack stops working 🔧**<br>
+*Reset it using \"reset.command\"*
 
 ### Operation not permitted
 Enable `System Preferences ▸ Privacy & Security ▸ Full Disk Access ▸ Terminal`
