@@ -1,0 +1,7 @@
+[submodule "submodules/hook_parallels"]
+	path = submodules/hook_parallels
+	url = https://github.com/trueToastedCode/ParallelsLab.git
+	branch = hook-parallels
+[submodule "submodules/insert_dylib"]
+	path = submodules/insert_dylib
+	url = https://github.com/tyilo/insert_dylib.git

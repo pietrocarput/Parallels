@@ -10,10 +10,8 @@ Crack for Parallels Desktop 19.1.0-54729
 1. Install Parallels Desktop:<br>
    https://download.parallels.com/desktop/v19/19.1.0-54729/ParallelsDesktop-19.1.0-54729.dmg
 3. Sign out your'e account
-4. `chmod +x install.sh && chmod +x Launch\ Parallels.command && sudo ./install.sh`
-5. Double click `Launch Parallels.command`
+4. `git submodule update --init --recursive && chmod +x install.sh && chmod +x Launch\ Parallels.command && sudo ./install.sh`
 
-You will always need to use this launcher as a workaround to prevent signature errors from occurring. However, if you are a developer with permission to use com.apple.vm.* or are willing to disable System Integrity Protection, there is a better approach available.
 ### Operation not permitted
 Enable `System Preferences ▸ Privacy & Security ▸ Full Disk Access ▸ Terminal`
 ### codesign error
