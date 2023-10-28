@@ -75,7 +75,7 @@ if [ ! -f "$INSERT_DYLIB_BIN" ]; then
   fi
 fi
 
-# compile HookMac
+# compile HookParallels
 if [ ! -f "$HOOK_PARALLELS_DYLIB" ]; then
   xcodebuild -project "$HOOK_PARALLELS_PRJ"
   if [ ! -f "$HOOK_PARALLELS_DYLIB" ]; then
@@ -156,7 +156,7 @@ dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=5877504 conv=notrunc
 # 0x7ABE20
 dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=8044064 conv=notrunc
 
-# insert HookMa dylib
+# insert HookParallels dylib
 cp "$HOOK_PARALLELS_DYLIB" "$HOOK_PARALLELS_DYLIB_DST"
 "$INSERT_DYLIB_BIN" --no-strip-codesig --inplace "$HOOK_PARALLELS_DYLIB_DST" "$PDFM_DISP_DST"
 
