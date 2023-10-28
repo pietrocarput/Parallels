@@ -5,3 +5,6 @@
 [submodule "submodules/insert_dylib"]
 	path = submodules/insert_dylib
 	url = https://github.com/tyilo/insert_dylib.git
+[submodule "submodules/rd_route"]
+	path = submodules/rd_route
+	url = https://github.com/trueToastedCode/rd_route.git
