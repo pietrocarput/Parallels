@@ -15,7 +15,7 @@ The use of software cracks for illegal purposes is strictly prohibited and we en
 
 ## Usage
 1. [Install Parallels Desktop](https://download.parallels.com/desktop/v19/19.1.0-54729/ParallelsDesktop-19.1.0-54729.dmg)<br>
-2. Sign out your'e account
+2. Sign out your account
 3. Install [Xcode from the App Store](https://apps.apple.com/us/app/xcode/id497799835?mt=12)<br>
    Open it afterwards and install the default components (iOS and MacOS, which cannot be unchecked)
 4. `git submodule update --init --recursive && chmod +x install.sh && chmod +x reset.command && sudo ./install.sh`
@@ -37,7 +37,7 @@ Inspired trueToastedCode on dylib-injections in 19.1
 ### ⚠ Don't fully quit and reopen Parallels very quickly ⚠
 *It's automatically resetting the crack using hooked functions but this may break it*
 
-### 🔧 In case you're crack stops working 🔧
+### 🔧 In case your crack stops working 🔧
 Reset it using \"reset.command\"
 
 ### Issues
@@ -50,7 +50,7 @@ Ensure xcode command line tools installed. Install it with using the command `xc
 
 Check installation with `xcode-select -p`, which will output `/Library/Developer/CommandLineTools` or `/Applications/Xcode.app/Contents/Developer`.
 ## Hosts
-You also wan't to block Parallels Servers.
+You also want to block Parallels Servers.
 ```
 127.0.0.1 download.parallels.com
 127.0.0.1 update.parallels.com
