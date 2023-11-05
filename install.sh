@@ -21,6 +21,7 @@ PDFM_DISP_DST="${PDFM_DISP_DIR}/prl_disp_service"
 PDFM_DISP_BCUP="${PDFM_DISP_DST}_bcup"
 PDFM_DISP_PATCH="${PDFM_DISP_DST}_patched"
 PDFM_DISP_ENT="${BASE_PATH}/ParallelsService.entitlements"
+PDFM_DISP_HASH="b7ea2e337e4f950b7e9d576e97d7aae9ad132958c30b151666afa9a4467b5e1c"
 
 TMP_DIR="${BASE_PATH}/tmp"
 
@@ -43,12 +44,24 @@ HOOK_PARALLELS_PRJ="${HOOK_PARALLELS_DIR}/HookParallels.xcodeproj"
 HOOK_PARALLELS_DYLIB="${HOOK_PARALLELS_DIR}/build/Release/libHookParallels.dylib"
 HOOK_PARALLELS_DYLIB_DST="${PDFM_DISP_DIR}/libHookParallels.dylib"
 
+# check parallels installation
+if [ ! -d "$PDFM_DIR" ]; then
+  echo -e "${COLOR_ERR}[-] Parallels Desktop installation not found.${NOCOLOR}"
+  exit 2
+fi
+
 # check parallels desktop version
 VERSION_1=$(defaults read "${PDFM_DIR}/Contents/Info.plist" CFBundleShortVersionString)
 VERSION_2=$(defaults read "${PDFM_DIR}/Contents/Info.plist" CFBundleVersion)
 INSTALL_VER="${VERSION_1}-${VERSION_2}"
 if [ "${PDFM_VER}" != "${VERSION_1}-${VERSION_2}" ]; then
   echo -e "${COLOR_ERR}[-] This script is for ${PDFM_VER}, but your's is ${INSTALL_VER}.${NOCOLOR}"
+  exit 2
+fi
+
+# check submodule files
+if [ ! -d "$INSERT_DYLIB_PRJ" ] || [ ! -d "$HOOK_PARALLELS_PRJ" ]; then
+  echo -e "${COLOR_ERR}[-] Missing submodule files, perhaps you forgot to execute \"git submodule update --init --recursive\"${NOCOLOR}"
   exit 2
 fi
 
@@ -59,9 +72,33 @@ if [ "$EUID" -ne 0 ]; then
   exit 5
 fi
 
-if [ ! -d "$INSERT_DYLIB_PRJ" ] || [ ! -d "$HOOK_PARALLELS_PRJ" ]; then
-  echo -e "${COLOR_ERR}[-] Missing submodule files, perhaps you forgot to execute \"git submodule update --init --recursive\"${NOCOLOR}"
-  exit 2
+# check state of pdfm disp
+need_recover_pdfm_disp=false
+
+if [ ! -f "$PDFM_DISP_DST" ] || [ $(shasum -a 256 "$PDFM_DISP_DST" | awk '{print $1}') != "$PDFM_DISP_HASH" ]; then
+  need_recover_pdfm_disp=true
+fi
+
+# check state of pdfm disp bcup
+need_backup_pdfm_disp=true
+
+if [ -f "$PDFM_DISP_BCUP" ] && [ $(shasum -a 256 "$PDFM_DISP_BCUP" | awk '{print $1}') == "$PDFM_DISP_HASH" ]; then
+  need_backup_pdfm_disp=false
+fi
+
+# recover pdfm disp if necessary 
+if [ "$need_recover_pdfm_disp" = true ]; then
+  if [ "$need_backup_pdfm_disp" = true ]; then
+    echo -e "${COLOR_ERR}[-] State of Parallels Disp is invalid and a valid backup could not be found. Please reinstall Parallels.${NOCOLOR}"
+    exit 2
+  fi
+  echo -e "${COLOR_WARN}[-] State of Parallels Disp is invalid, recover from backup.${NOCOLOR}"
+  cp -f "$PDFM_DISP_BCUP" "$PDFM_DISP_DST"
+fi
+
+# backup pdfm disp if necessary
+if [ "$need_backup_pdfm_disp" = true ]; then
+  cp -f "${PDFM_DISP_DST}" "${PDFM_DISP_BCUP}"
 fi
 
 echo -e "${COLOR_INFO}[*] Compiling...${NOCOLOR}"
@@ -79,7 +116,7 @@ fi
 if [ ! -f "$HOOK_PARALLELS_DYLIB" ]; then
   xcodebuild -project "$HOOK_PARALLELS_PRJ"
   if [ ! -f "$HOOK_PARALLELS_DYLIB" ]; then
-    echo -e "${COLOR_ERR}[-] Compiled HookMac.dylib not found.${NOCOLOR}"
+    echo -e "${COLOR_ERR}[-] Compiled HookParallels dylib not found.${NOCOLOR}"
     exit 2
   fi
 fi
@@ -114,10 +151,6 @@ echo -n -e '\xeb\x08' > "${X86_64_JMP_0xA}"
 echo -n -e '\x6a\x01\x58\xc3' > "${X86_64_RET_1}"
 
 # patch prl_disp_service
-if [ ! -f "${PDFM_DISP_BCUP}" ]; then
-    cp "${PDFM_DISP_DST}" "${PDFM_DISP_BCUP}"
-fi
-
 chflags -R 0 "${PDFM_DISP_DST}"
 
 # [ ARM64 ]
@@ -157,13 +190,13 @@ dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=5877504 conv=notrunc
 dd if="${X86_64_RET_1}" of="${PDFM_DISP_DST}" obs=1 seek=8044064 conv=notrunc
 
 # insert HookParallels dylib
-cp "$HOOK_PARALLELS_DYLIB" "$HOOK_PARALLELS_DYLIB_DST"
+cp -f "$HOOK_PARALLELS_DYLIB" "$HOOK_PARALLELS_DYLIB_DST"
 "$INSERT_DYLIB_BIN" --no-strip-codesig --inplace "$HOOK_PARALLELS_DYLIB_DST" "$PDFM_DISP_DST"
 
 chown root:wheel "${PDFM_DISP_DST}"
 chmod 755 "${PDFM_DISP_DST}"
 codesign -f -s - --timestamp=none --all-architectures --entitlements "${PDFM_DISP_ENT}" "${PDFM_DISP_DST}"
-cp "${PDFM_DISP_DST}" "${PDFM_DISP_PATCH}"
+cp -f "${PDFM_DISP_DST}" "${PDFM_DISP_PATCH}"
 
 # delete temp folder
 rm -rf "${TMP_DIR}"
