@@ -18,7 +18,10 @@ The use of software cracks for illegal purposes is strictly prohibited and we en
 2. Sign out your account
 3. Install [Xcode from the App Store](https://apps.apple.com/us/app/xcode/id497799835?mt=12)<br>
    Open it afterwards and install the default components (iOS and MacOS, which cannot be unchecked)
-4. `git submodule update --init --recursive && chmod +x install.sh && chmod +x reset.command && sudo ./install.sh`
+4. Clone the respository<br>
+   `git clone --depth 1 https://github.com/trueToastedCode/ParallelsLab.git && cd ParallelsLab && git submodule update --init --recursive`
+5. Install<br>
+   `chmod +x install.sh && chmod +x reset.command && sudo ./install.sh`
 
 ## Donation
 <img src="https://github.com/trueToastedCode/ParallelsLab/assets/44642574/8a7a724b-4fed-4f68-8660-e475587d34fd" width=96><br><br>
